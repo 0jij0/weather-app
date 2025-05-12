@@ -1,68 +1,79 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  /* Ensure the body takes at least the full viewport height */
   min-height: 100vh;
+
+  /* Use flexbox to center content vertically and horizontally */
+  display: flex;
+  align-items: center;      /* Vertically center items */
+  justify-content: center;  /* Horizontally center items */
+
+  /* Add padding around the content */
+  padding: 1rem;
+
+  /* Apply a blue gradient background from top-left to bottom-right */
+  background: linear-gradient(to bottom right, #60a5fa, #3b82f6);
+
+  /* Set a clean, sans-serif font stack */
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.wrapper{
+  background: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+  border-radius: 1.5rem; /* Rounded corners */
+  padding: 2rem; /* Padding around the content */
+  min-width: 400px; /* Minimum width of the wrapper */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  backdrop-filter: blur(10px); /* Blur effect for the background */
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.city{
+  font-size: 2.5rem; /* Font size for the city name */
+  font-weight: bold; /* Bold font weight */
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.temperature{
+  font-size: 4rem; /* Font size for the temperature */
+  font-weight: bold; /* Bold font weight */
+}
+
+.condition{
+  font-size: 1.5rem; /* Font size for the weather condition */
+}
+
+.weather-details{
+  display: flex;
+  justify-content: space-between; /* Space between items */
+  align-items: center; /* Center items vertically */
+  margin-bottom: 2rem; /* Margin below the details */
+}
+
+.forecast{
+  border-top: 1px solid rgba(255, 255, 255, 0.2); /* Top border for separation */
+  padding-top: 1rem; /* Padding above the forecast */
+}
+
+.forecast-header{
+  font-size: 1.5rem;
+  font-weight: bold; /* Bold font weight */
+}
+
+.forecast-days{
+  display: flex; /* Flexbox for horizontal layout */
+  justify-content: space-between; /* Space between items */
+  margin-top: 1rem; /* Margin above the forecast days */
+}
+
+.forecast-day{
+  font-weight: bold; /* Bold font weight */
+}
+
+.forecast-temp,
+.forecast-condition{
+  font-size: 1.2rem; /* Font size for forecast details */
+}
+
+.footer{
+  margin-top: 2rem; /* Margin above the footer */
+  font-size: 0.8rem; /* Smaller font size for the footer */
+  color: rgba(255, 255, 255, 0.7); /* Lighter color for the footer text */
 }

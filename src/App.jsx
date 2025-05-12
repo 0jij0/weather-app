@@ -6,7 +6,7 @@ function App() {
     <>
       <div className="wrapper">
         <div className="header">
-          <h1 className="city"></h1>
+          <h1 className="city">Nairobi</h1>
           <p className="temperature"></p>
           <p className="condition"></p>
         </div>
@@ -27,15 +27,27 @@ function App() {
           <h2 className="forecast-header">5-day weather forecast</h2>
           <div className="forecast-days">
             <div className="forecast-day">
-              <p className="day">Monday</p>
-              <p className="temp">20°C</p>
-              <p className="condition">Sunny</p>
+              <p>Monday</p>
+              <p>20°C</p>
+              <p>Sunny</p>
             </div>
+
+            <div className="forecast-day">
+              <p>Tuesday</p>
+              <p>22°C</p>
+              <p>Cloudy</p>
           </div>
         </div>
       </div>
+      </div>
+      <div className="footer">
+        <p>Weather App</p>
+        <p>© 2025</p>
+        <p>Developed by 0jij0</p>
+        </div>
     </>
   );
-}
+  }
+
 
 export default App;
