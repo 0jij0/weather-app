@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react"; // Import useEffect for side effects
+import { useState, useEffect } from "react";
 import "./App.css";
-import.meta.env.VITE_WEATHER_KEY; // Import environment variable for API key
 
 function App() {
   // Get API key from environment variables
   const apiKey = import.meta.env.VITE_WEATHER_KEY;
+
+  // State to store forecast data (initialize as empty array)
+  const [forecast, setForecast] = useState([]);
 
   // State to store weather data, initially null
   const [weatherData, setWeatherData] = useState(null);
@@ -17,66 +19,97 @@ function App() {
     // Async function to fetch weather data from OpenWeatherMap API
     const fetchWeatherData = async (cityName) => {
       try {
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=imperial`;
-        const response = await fetch(url); // Fetch data from API
-        const data = await response.json(); // Parse JSON response
-        setWeatherData(data); // Update state with fetched data
-        console.log(data); // Log the data for debugging
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric`;
+        const response = await fetch(url);
+        const data = await response.json();
+        setWeatherData(data);
+
+        const foreCastResponse = await fetch(
+          `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`
+        );
+        const foreCastData = await foreCastResponse.json();
+
+        // Defensive: check if list exists before filtering
+        const dailyForecast = foreCastData.list
+          ? foreCastData.list.filter((item, index) => index % 8 === 0)
+          : [];
+        setForecast(dailyForecast);
       } catch (error) {
-        console.error("Error fetching weather data:", error); // Log errors
+        console.error("Error fetching weather data:", error);
       }
     };
 
-    fetchWeatherData(city); // Call the fetch function
-  }, [city, apiKey]); // Dependency array: runs when city or apiKey changes
+    fetchWeatherData(city);
+  }, [city, apiKey]);
 
   return (
     <>
       {/* Main wrapper for the weather app */}
       <div className="wrapper">
-        <div className="header">
-          {/* Display city name */}
-          <h1 className="city">Nairobi</h1>
-          {/* Display temperature */}
-          <p className="temperature">17</p>
-          {/* Display weather condition */}
-          <p className="condition">Cloudy</p>
-        </div>
+        {weatherData && weatherData.main && weatherData.weather && (
+          <>
+            <div className="header">
+              {/* Display city name */}
+              <h1 className="city">{weatherData.name}</h1>
+              {/* Display temperature */}
+              <p className="temperature">
+                {Math.round(weatherData.main.temp)}°c
+              </p>
+              {/* Display weather condition */}
+              <p className="condition">{weatherData.weather[0].main}</p>
+            </div>
 
-        {/* Weather details section */}
-        <div className="weather-details">
-          <div>
-            <p>Humidity</p>
-            <p>60%</p>
-          </div>
-          <div>
-            <p>Wind Speed</p>
-            <p>10 km/h</p>
-          </div>
-        </div>
+            {/* Weather details section */}
+            <div className="weather-details">
+              <div>
+                <p>Humidity</p>
+                <p style={{ fontWeight: "bold" }}>
+                  {Math.round(weatherData.main.humidity)}%
+                </p>
+              </div>
+              <div>
+                <p>Wind Speed</p>
+                {/* Corrected: wind speed is in weatherData.wind, not main */}
+                <p style={{ fontWeight: "bold" }}>
+                  {weatherData.wind
+                    ? Math.round(weatherData.wind.speed)
+                    : "N/A"}{" "}
+                  kph
+                </p>
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Forecast section */}
-        <div className="forecast">
-          <h2 className="forecast-header">5-day weather forecast</h2>
-          <div className="forecast-days">
-            <div className="forecast-day">
-              <p>Monday</p>
-              <p>20°C</p>
-              <p>Sunny</p>
-            </div>
-            <div className="forecast-day">
-              <p>Tuesday</p>
-              <p>22°C</p>
-              <p>Cloudy</p>
+        {forecast && forecast.length > 0 && (
+          <div className="forecast">
+            <h2 className="forecast-header">5-day weather forecast</h2>
+            <div className="forecast-days">
+              {forecast.map((day, index) => (
+                <div key={index} className="forecast-day">
+                  <p>
+                    {new Date(day.dt * 1000).toLocaleDateString("en-US", {
+                      weekday: "long",
+                    })}
+                  </p>
+                  <img
+                    src={`http://openweathermap.org/img/wn/${day.weather[0].icon}.png`}
+                    alt={day.weather[0].description}
+                  />
+                  <p>{Math.round(day.main.temp)}°c</p>
+                </div>
+              ))}
             </div>
           </div>
+        )}
+
+        {/* Footer section */}
+        <div className="footer">
+          <p>Weather App</p>
+          <p>© 2025</p>
+          <p>Developed by 0jij0</p>
         </div>
-      </div>
-      {/* Footer section */}
-      <div className="footer">
-        <p>Weather App</p>
-        <p>© 2025</p>
-        <p>Developed by 0jij0</p>
       </div>
     </>
   );
