@@ -1,24 +1,29 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import SearchInput from "./SearchInput";
 
 function App() {
   // Get API key from environment variables
   const apiKey = import.meta.env.VITE_WEATHER_KEY;
 
+  // State for the search input field
+  const [searchInput, setSearchInput] = useState("");
   // State to store forecast data (initialize as empty array)
   const [forecast, setForecast] = useState([]);
-
   // State to store weather data, initially null
   const [weatherData, setWeatherData] = useState(null);
-
   // State to store the current city, default is Nairobi
   const [city, setCity] = useState("Nairobi");
+  // State for error and loading
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Fetch weather data whenever city or apiKey changes
   useEffect(() => {
-    // Async function to fetch weather data from OpenWeatherMap API
     const fetchWeatherData = async (cityName) => {
       try {
+        setLoading(true);
+        setError(null);
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric`;
         const response = await fetch(url);
         const data = await response.json();
@@ -35,17 +40,46 @@ function App() {
           : [];
         setForecast(dailyForecast);
       } catch (error) {
+        setError("Failed to fetch weather data.");
         console.error("Error fetching weather data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchWeatherData(city);
   }, [city, apiKey]);
 
+  // Handle form submission for searching a city
+  function handleSearch(e) {
+    e.preventDefault();
+    if (searchInput.trim() !== "") {
+      setCity(searchInput);
+    }
+  }
+
+  if (loading) return <div className="loading">Loading...</div>;
+
   return (
     <>
+      {/* Search input form */}
+      <form onSubmit={handleSearch} className="search-form">
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="Enter city name"
+          className="search-input"
+        />
+        <button type="submit" className="search-btn">
+          Search
+        </button>
+      </form>
+      {error && <p className="error">{error}</p>}
+
       {/* Main wrapper for the weather app */}
       <div className="wrapper">
+        {/* Weather display */}
         {weatherData && weatherData.main && weatherData.weather && (
           <>
             <div className="header">
@@ -69,7 +103,6 @@ function App() {
               </div>
               <div>
                 <p>Wind Speed</p>
-                {/* Corrected: wind speed is in weatherData.wind, not main */}
                 <p style={{ fontWeight: "bold" }}>
                   {weatherData.wind
                     ? Math.round(weatherData.wind.speed)
