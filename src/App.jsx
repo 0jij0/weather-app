@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import SearchInput from "./SearchInput";
+
 
 function App() {
   // Get API key from environment variables
